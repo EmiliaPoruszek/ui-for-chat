@@ -17,10 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.resi_tech.myapplication.R
 import com.resi_tech.myapplication.activities.main.DarkGrayText
-import com.resi_tech.myapplication.activities.main.calculateTime
 import com.resi_tech.myapplication.components.ImageWithPlaceholder
 import com.resi_tech.myapplication.components.RoundedCard
-import com.resi_tech.myapplication.models.Author
 import com.resi_tech.myapplication.ui.theme.DimenScheme
 
 @Composable
@@ -105,7 +103,7 @@ fun ChatItemContent(
       )
 
       DarkGrayText(
-        "${calculateTime(timestamp)} min ago",
+        "${calculateMinutesAgo(timestamp)} min ago",
         textAlign = authorAlign,
         modifier = Modifier.fillMaxWidth(),
         style = MaterialTheme.typography.labelSmall
@@ -116,4 +114,10 @@ fun ChatItemContent(
       ImageWithPlaceholder(avatarDrawableId, avatarColor)
     }
   }
+}
+
+private fun calculateMinutesAgo(timestamp: Long): Long {
+  val now = System.currentTimeMillis()
+  val diff = now - timestamp
+  return diff / 1000 / 60
 }

@@ -92,21 +92,3 @@ fun ChatScreen(viewModel: MainViewModel = MainViewModel()) {
     }
   }
 }
-
-
-
-/*var maxAgo = 60
-fun randomTime(): Long {
-  val random = Random(System.currentTimeMillis())
-  val min = (0.7f * maxAgo).toInt()
-  val max = (0.3f * maxAgo).toInt()
-  val minutesAgo = random.nextInt(max) + min
-  maxAgo = minutesAgo
-  return System.currentTimeMillis() - minutesAgo * 60 * 1000
-}*/
-
-fun calculateTime(timestamp: Long): Long {
-  val now = System.currentTimeMillis()
-  val diff = now - timestamp
-  return diff / 1000 / 60
-}

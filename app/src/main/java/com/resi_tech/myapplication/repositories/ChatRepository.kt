@@ -9,6 +9,9 @@ import kotlin.random.Random
 
 class ChatRepository {
   suspend fun getMessages(): Flow<ChatMessage> = flow {
+    // pretend we wait for a network response
+    delay(3000)
+
     val random = Random(System.currentTimeMillis())
     val messages = listOf(
       ChatMessage(author = Author.Molly(), message = "Hi Tom! How are you?"),
