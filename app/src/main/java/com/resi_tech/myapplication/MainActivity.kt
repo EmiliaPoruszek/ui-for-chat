@@ -202,7 +202,7 @@ fun ChatItemContent(
       .padding(DimenScheme.Medium)
       .fillMaxWidth()
   ) {
-    if (author.orientation == "left") {
+    if (isLeft) {
       ImageWithPlaceholder(author.avatarDrawableId, author.avatarColor)
     }
 
@@ -225,7 +225,7 @@ fun ChatItemContent(
       Ago("${calculateTime(timestamp)} min ago", textAlign = authorAlign, modifier = Modifier.fillMaxWidth())
     }
 
-    if (author.orientation == "right") {
+    if (!isLeft) {
       ImageWithPlaceholder(author.avatarDrawableId, author.avatarColor)
     }
   }
