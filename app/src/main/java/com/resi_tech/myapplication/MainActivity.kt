@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.resi_tech.myapplication.components.ImageWithPlaceholder
 import com.resi_tech.myapplication.models.Author
+import com.resi_tech.myapplication.ui.theme.DimenScheme
 import com.resi_tech.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -169,12 +170,17 @@ fun RoundedCard(
   // slide the card from left or right when it is uplaoded
   ElevatedCard(
     elevation = CardDefaults.cardElevation(
-      defaultElevation = 8.dp,
+      defaultElevation = DimenScheme.Medium,
     ),
     modifier = modifier
       .fillMaxSize()
-      .padding(16.dp, 8.dp, 16.dp, 8.dp)
-      .clip(RoundedCornerShape(8.dp))
+      .padding(
+        DimenScheme.Large,
+        DimenScheme.Medium,
+        DimenScheme.Large,
+        DimenScheme.Medium
+      )
+      .clip(RoundedCornerShape(DimenScheme.Medium))
       .fillMaxWidth(0.6f),
       colors = CardDefaults.cardColors(
         containerColor = color
@@ -193,7 +199,7 @@ fun ChatItemContent(
   Row(
     horizontalArrangement = if (isLeft) Arrangement.Start else Arrangement.End,
     modifier = Modifier
-      .padding(8.dp)
+      .padding(DimenScheme.Medium)
       .fillMaxWidth()
   ) {
     if (author.orientation == "left") {
@@ -203,14 +209,14 @@ fun ChatItemContent(
     val authorAlign = if (isLeft) TextAlign.End else TextAlign.Start
     val textAlign = if (isLeft) TextAlign.Start else TextAlign.End
 
-    val paddingLeft = if (isLeft) 8.dp else 0.dp
-    val paddingRight = if (isLeft) 0.dp else 8.dp
+    val paddingLeft = if (isLeft) DimenScheme.Medium else DimenScheme.None
+    val paddingRight = if (isLeft) DimenScheme.None else DimenScheme.Medium
 
     Column(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = if (isLeft) Alignment.Start else Alignment.End,
       modifier = Modifier
-        .padding(paddingLeft, 0.dp, paddingRight, 0.dp)
+        .padding(paddingLeft, DimenScheme.None, paddingRight, DimenScheme.None)
         .fillMaxHeight()
         .fillMaxWidth(if (isLeft) 1f else 0.8f)
     ) {
