@@ -1,4 +1,4 @@
-package com.resi_tech.myapplication
+package com.resi_tech.myapplication.activities.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.resi_tech.myapplication.activities.main.components.ChatItem
 import com.resi_tech.myapplication.components.ImageWithPlaceholder
 import com.resi_tech.myapplication.components.RoundedCard
 import com.resi_tech.myapplication.models.Author
@@ -77,9 +78,14 @@ fun ChatScreen(viewModel: MainViewModel = MainViewModel()) {
         items(messages.size) { index ->
           val message = messages[index]
           ChatItem(
-            author = message.author,
+            authorName = message.author.name,
+            avatarDrawableId = message.author.avatarDrawableId,
+            avatarColor = message.author.avatarColor,
+            cloudColor = message.author.cloudColor,
             message = message.message,
-            timestamp = message.timestamp
+            timestamp = message.timestamp,
+            isLeft = message.author.orientation == "left",
+            modifier = Modifier.fillMaxWidth()
           )
         }
       }
@@ -87,72 +93,7 @@ fun ChatScreen(viewModel: MainViewModel = MainViewModel()) {
   }
 }
 
-@Composable
-fun ChatItem(
-  author: Author,
-  message: String,
-  timestamp: Long
-) {
-  Box(
-    contentAlignment = if (author.orientation == "left") Alignment.CenterStart else Alignment.CenterEnd,
-    modifier = Modifier.fillMaxWidth()
-  ) {
-    RoundedCard(
-      color = author.cloudColor,
-      modifier = Modifier
-        .width(300.dp)
-    ) {
-      ChatItemContent(
-        author,
-        message,
-        timestamp
-      )
-    }
-  }
-}
 
-
-
-@Composable
-fun ChatItemContent(
-  author: Author,
-  message: String = "Hi",
-  timestamp: Long) {
-  val isLeft = author.orientation == "left"
-  Row(
-    horizontalArrangement = if (isLeft) Arrangement.Start else Arrangement.End,
-    modifier = Modifier
-      .padding(DimenScheme.Medium)
-      .fillMaxWidth()
-  ) {
-    if (isLeft) {
-      ImageWithPlaceholder(author.avatarDrawableId, author.avatarColor)
-    }
-
-    val authorAlign = if (isLeft) TextAlign.End else TextAlign.Start
-    val textAlign = if (isLeft) TextAlign.Start else TextAlign.End
-
-    val paddingLeft = if (isLeft) DimenScheme.Medium else DimenScheme.None
-    val paddingRight = if (isLeft) DimenScheme.None else DimenScheme.Medium
-
-    Column(
-      verticalArrangement = Arrangement.Top,
-      horizontalAlignment = if (isLeft) Alignment.Start else Alignment.End,
-      modifier = Modifier
-        .padding(paddingLeft, DimenScheme.None, paddingRight, DimenScheme.None)
-        .fillMaxHeight()
-        .fillMaxWidth(if (isLeft) 1f else 0.8f)
-    ) {
-      DarkGrayText(author.name, textAlign = authorAlign, modifier = Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall)
-      DarkGrayText(message, textAlign = textAlign, modifier = Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodyLarge)
-      DarkGrayText("${calculateTime(timestamp)} min ago", textAlign = authorAlign, modifier = Modifier.fillMaxWidth(), style = MaterialTheme.typography.labelSmall)
-    }
-
-    if (!isLeft) {
-      ImageWithPlaceholder(author.avatarDrawableId, author.avatarColor)
-    }
-  }
-}
 
 /*var maxAgo = 60
 fun randomTime(): Long {

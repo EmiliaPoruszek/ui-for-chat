@@ -1,4 +1,4 @@
-package com.resi_tech.myapplication
+package com.resi_tech.myapplication.activities.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +29,7 @@ class MainViewModel(): ViewModel() {
         }
         .catch { e ->
           // TODO: Handle errors
+          _messages.value = emptyList()
         }
         .collect { messageList ->
           _messages.value = messageList
