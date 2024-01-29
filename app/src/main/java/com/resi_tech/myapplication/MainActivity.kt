@@ -3,6 +3,7 @@ package com.resi_tech.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,17 +42,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.resi_tech.myapplication.models.Author
-import com.resi_tech.myapplication.models.ChatMessage
 import com.resi_tech.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.delay
-import java.sql.Timestamp
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    val viewModel: MainViewModel by viewModels()
+
     setContent {
-      Screen()
+      Screen(viewModel)
     }
   }
 }
@@ -106,38 +111,14 @@ fun Message(
   heightDp = 640
 )
 @Composable
-fun Screen() {
-  val molly = Author(
-    name = "Molly",
-    avatarColor = Color(0xFFB8E0EF),
-    orientation = "right",
-    avatarDrawableId = R.drawable.molly_avatar,
-    cloudColor = Color(0xFFEFB8C8)
-  )
-  val tom = Author(
-    name = "Tom",
-    avatarColor = Color(0xFFEFB8C8),
-    orientation = "left",
-    avatarDrawableId = R.drawable.tom_avatar,
-    cloudColor = Color(0xFFB8E0EF)
-  )
-
-  val conversation = arrayListOf<ChatMessage>(
-    ChatMessage(tom, "Hi", randomTime()),
-    ChatMessage(molly, "Hi", randomTime()),
-    ChatMessage(tom, "How are you?", randomTime()),
-    ChatMessage(molly, "I'm fine, thanks!", randomTime()),
-    ChatMessage(tom, "What are you doing?", randomTime()),
-    ChatMessage(molly, "I'm working on a new project", randomTime()),
-    ChatMessage(tom, "Cool! What is it about?", randomTime()),
-    ChatMessage(molly, "It's a new app for Android", randomTime()),
-  )
+fun Screen(viewModel: MainViewModel = MainViewModel()) {
+  val messages by viewModel.messages.collectAsState(initial = emptyList())
 
   MyApplicationTheme {
     Box(modifier = Modifier.fillMaxSize()) {
       LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(conversation.size) { index ->
-          val message = conversation[index]
+        items(messages.size) { index ->
+          val message = messages[index]
           ChatItem(
             author = message.author,
             message = message.message,
