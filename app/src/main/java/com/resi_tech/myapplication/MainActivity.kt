@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.resi_tech.myapplication.components.ImageWithPlaceholder
 import com.resi_tech.myapplication.models.Author
 import com.resi_tech.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.delay
@@ -188,8 +189,9 @@ fun ChatItemContent(
   author: Author,
   message: String = "Hi",
   timestamp: Long) {
+  val isLeft = author.orientation == "left"
   Row(
-    horizontalArrangement = if (author.orientation == "left") Arrangement.Start else Arrangement.End,
+    horizontalArrangement = if (isLeft) Arrangement.Start else Arrangement.End,
     modifier = Modifier
       .padding(8.dp)
       .fillMaxWidth()
@@ -198,19 +200,19 @@ fun ChatItemContent(
       ImageWithPlaceholder(author.avatarDrawableId, author.avatarColor)
     }
 
-    val authorAlign = if (author.orientation == "left") TextAlign.End else TextAlign.Start
-    val textAlign = if (author.orientation == "left") TextAlign.Start else TextAlign.End
+    val authorAlign = if (isLeft) TextAlign.End else TextAlign.Start
+    val textAlign = if (isLeft) TextAlign.Start else TextAlign.End
 
-    val paddingLeft = if (author.orientation == "left") 8.dp else 0.dp
-    val paddingRight = if (author.orientation == "left") 0.dp else 8.dp
+    val paddingLeft = if (isLeft) 8.dp else 0.dp
+    val paddingRight = if (isLeft) 0.dp else 8.dp
 
     Column(
       verticalArrangement = Arrangement.Top,
-      horizontalAlignment = if (author.orientation == "left") Alignment.Start else Alignment.End,
+      horizontalAlignment = if (isLeft) Alignment.Start else Alignment.End,
       modifier = Modifier
         .padding(paddingLeft, 0.dp, paddingRight, 0.dp)
         .fillMaxHeight()
-        .fillMaxWidth(if (author.orientation == "left") 1f else 0.8f)
+        .fillMaxWidth(if (isLeft) 1f else 0.8f)
     ) {
       AuthorName(author.name, textAlign = authorAlign, modifier = Modifier.fillMaxWidth())
       Message(message, textAlign = textAlign, modifier = Modifier.fillMaxWidth())
@@ -223,65 +225,7 @@ fun ChatItemContent(
   }
 }
 
-@Composable
-fun ImageWithPlaceholder(
-  drawableId: Int = R.drawable.ic_launcher_foreground,
-  background: Color = Color.Black
-) {
-  val uploaded = remember { mutableStateOf(false) }
-  LaunchedEffect(Unit) {
-    delay(500)
-    uploaded.value = true
-  }
-  Column(
-    verticalArrangement = Arrangement.Center,
-    modifier = Modifier
-      .fillMaxHeight()
-      .width(50.dp)
-  ) {
-    if (uploaded.value) {
-      LauncherImage(drawableId, background)
-    } else {
-      imagePlaceholder(background)
-    }
-  }
-}
-
-@Composable
-fun LauncherImage(
-  drawableId: Int = R.drawable.ic_launcher_foreground,
-  background: Color = Color.Black
-) {
-  Box {
-    Image(
-      painter = painterResource(
-        id = drawableId
-      ),
-      contentDescription = "Launcher Icon",
-      modifier = Modifier
-        .padding(2.dp)
-        .clip(CircleShape)
-        .background(background)
-        .fillMaxWidth()
-    )
-  }
-}
-
-@Composable
-fun imagePlaceholder(background: Color = Color.Black) {
-  Spacer(
-      modifier = Modifier
-        .padding(2.dp)
-        .clip(CircleShape)
-        .fillMaxHeight()
-        .aspectRatio(1f)
-        .background(background)
-        .blur(10.dp)
-        .alpha(0.5f)
-    )
-}
-
-var maxAgo = 60
+/*var maxAgo = 60
 fun randomTime(): Long {
   val random = Random(System.currentTimeMillis())
   val min = (0.7f * maxAgo).toInt()
@@ -289,7 +233,7 @@ fun randomTime(): Long {
   val minutesAgo = random.nextInt(max) + min
   maxAgo = minutesAgo
   return System.currentTimeMillis() - minutesAgo * 60 * 1000
-}
+}*/
 
 fun calculateTime(timestamp: Long): Long {
   val now = System.currentTimeMillis()
