@@ -9,6 +9,10 @@ class DimenScheme {
         val Medium = 8.dp
         val Large = 16.dp
         val XLarge = 32.dp
+
+        val RadiusSmall = 4.dp
+        val RadiusMedium = 8.dp
+        val RadiusLarge = 16.dp
     }
 }
 
