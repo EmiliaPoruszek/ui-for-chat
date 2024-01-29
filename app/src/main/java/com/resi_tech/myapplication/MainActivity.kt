@@ -38,6 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.resi_tech.myapplication.models.Author
+import com.resi_tech.myapplication.models.ChatMessage
 import com.resi_tech.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.delay
 import java.sql.Timestamp
@@ -96,20 +98,6 @@ fun Message(
     modifier = modifier
   )
 }
-
-data class Author(
-  val name: String,
-  val avatarColor: Color,
-  val avatarDrawableId: Int,
-  val orientation: String = "left",
-  val cloudColor: Color
-)
-
-data class ChatMessage(
-  val author: Author,
-  val message: String,
-  val timestamp: Long
-)
 
 @Preview(
   showBackground = true,
