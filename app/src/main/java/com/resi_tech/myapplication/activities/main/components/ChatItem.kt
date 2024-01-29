@@ -7,27 +7,32 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.resi_tech.myapplication.R
-import com.resi_tech.myapplication.activities.main.DarkGrayText
+import com.resi_tech.myapplication.components.DarkGrayText
 import com.resi_tech.myapplication.components.ImageWithPlaceholder
 import com.resi_tech.myapplication.components.RoundedCard
 import com.resi_tech.myapplication.ui.theme.DimenScheme
 
+@Preview(
+  showBackground = true,
+  backgroundColor = 0x666666,
+  widthDp = 360,
+  heightDp = 120
+)
 @Composable
 fun ChatItem(
   authorName: String = "Steve",
   avatarDrawableId: Int = R.drawable.ic_launcher_foreground,
   avatarColor: Color = Color.Black,
   cloudColor: Color = Color.White,
-  message: String = "Hi",
+  message: String = "Hi! How are you?",
   timestamp: Long = System.currentTimeMillis(),
   isLeft: Boolean = false,
   modifier: Modifier = Modifier
@@ -39,7 +44,7 @@ fun ChatItem(
     RoundedCard(
       color = cloudColor,
       modifier = Modifier
-        .width(300.dp)
+        .fillMaxWidth(0.7f)
     ) {
       ChatItemContent(
         authorName = authorName,
@@ -74,23 +79,20 @@ fun ChatItemContent(
       ImageWithPlaceholder(avatarDrawableId, avatarColor)
     }
 
-    val authorAlign = if (isLeft) TextAlign.End else TextAlign.Start
     val textAlign = if (isLeft) TextAlign.Start else TextAlign.End
-
-    val paddingLeft = if (isLeft) DimenScheme.Medium else DimenScheme.None
-    val paddingRight = if (isLeft) DimenScheme.None else DimenScheme.Medium
+    val padding = if (isLeft) DimenScheme.Medium else DimenScheme.None
 
     Column(
-      verticalArrangement = Arrangement.Top,
+      verticalArrangement = Arrangement.Center,
       horizontalAlignment = if (isLeft) Alignment.Start else Alignment.End,
       modifier = Modifier
-        .padding(paddingLeft, DimenScheme.None, paddingRight, DimenScheme.None)
+        .padding(padding, DimenScheme.None, padding, DimenScheme.None)
         .fillMaxHeight()
         .fillMaxWidth(if (isLeft) 1f else 0.8f)
     ) {
       DarkGrayText(
         authorName,
-        textAlign = authorAlign,
+        textAlign = textAlign,
         modifier = Modifier.fillMaxWidth(),
         style = MaterialTheme.typography.titleSmall
       )
@@ -104,7 +106,7 @@ fun ChatItemContent(
 
       DarkGrayText(
         "${calculateMinutesAgo(timestamp)} min ago",
-        textAlign = authorAlign,
+        textAlign = textAlign,
         modifier = Modifier.fillMaxWidth(),
         style = MaterialTheme.typography.labelSmall
       )

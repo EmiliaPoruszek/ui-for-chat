@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.resi_tech.myapplication.activities.main.components.ChatItem
+import com.resi_tech.myapplication.components.DarkGrayText
 import com.resi_tech.myapplication.components.ImageWithPlaceholder
 import com.resi_tech.myapplication.components.RoundedCard
 import com.resi_tech.myapplication.models.Author
@@ -46,22 +47,6 @@ class MainActivity : ComponentActivity() {
   }
 }
 
-@Composable
-fun DarkGrayText(
-  text: String,
-  textAlign: TextAlign,
-  style: TextStyle = MaterialTheme.typography.bodySmall,
-  modifier: Modifier = Modifier
-) {
-  Text(
-    text = "$text",
-    color = Color.DarkGray,
-    textAlign = textAlign,
-    style = style,
-    modifier = modifier
-  )
-}
-
 @Preview(
   showBackground = true,
   backgroundColor = 0xFFFFFFFF,
@@ -73,7 +58,10 @@ fun ChatScreen(viewModel: MainViewModel = MainViewModel()) {
   val messages by viewModel.messages.collectAsState(initial = emptyList())
 
   MyApplicationTheme {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+      contentAlignment = Alignment.Center,
+      modifier = Modifier.fillMaxSize()
+    ) {
       LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(messages.size) { index ->
           val message = messages[index]
@@ -88,6 +76,13 @@ fun ChatScreen(viewModel: MainViewModel = MainViewModel()) {
             modifier = Modifier.fillMaxWidth()
           )
         }
+      }
+      if (messages.isEmpty()) {
+          DarkGrayText(
+            text = "No messages yet",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+          )
       }
     }
   }
