@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.resi_tech.myapplication.activities.main.components.ChatItem
 import com.resi_tech.myapplication.components.DarkGrayText
+import com.resi_tech.myapplication.ui.theme.DynamicColorManager
 import com.resi_tech.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,9 +32,7 @@ class MainActivity : ComponentActivity() {
     val viewModel: MainViewModel by viewModels()
 
     setContent {
-      CenteredTopAppBar { padding ->
-        ChatScreen(padding, viewModel)
-      }
+      ChatScreen(viewModel)
     }
   }
 }
@@ -45,37 +44,42 @@ class MainActivity : ComponentActivity() {
   heightDp = 640
 )
 @Composable
-fun ChatScreen(padding: PaddingValues, viewModel: MainViewModel = MainViewModel()) {
+fun ChatScreen(
+  viewModel: MainViewModel = MainViewModel()
+) {
   val messages by viewModel.messages.collectAsState(initial = emptyList())
 
   MyApplicationTheme {
-    Box(
-      contentAlignment = Alignment.Center,
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(padding)
-    ) {
-      LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(messages.size) { index ->
-          val message = messages[index]
-          ChatItem(
-            authorName = message.author.name,
-            avatarDrawableId = message.author.avatarDrawableId,
-            avatarColor = message.author.avatarColor,
-            cloudColor = message.author.cloudColor,
-            message = message.message,
-            timestamp = message.timestamp,
-            isLeft = message.author.orientation == "left",
-            modifier = Modifier.fillMaxWidth()
-          )
+    CenteredTopAppBar() { padding ->
+      Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(padding)
+          .background(DynamicColorManager.colorScheme.background)
+      ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+          items(messages.size) { index ->
+            val message = messages[index]
+            ChatItem(
+              authorName = message.author.name,
+              avatarDrawableId = message.author.avatarDrawableId,
+              avatarColor = message.author.avatarColor,
+              cloudColor = message.author.cloudColor,
+              message = message.message,
+              timestamp = message.timestamp,
+              isLeft = message.author.orientation == "left",
+              modifier = Modifier.fillMaxWidth()
+            )
+          }
         }
-      }
-      if (messages.isEmpty()) {
+        if (messages.isEmpty()) {
           DarkGrayText(
             text = "No messages yet",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
           )
+        }
       }
     }
   }
