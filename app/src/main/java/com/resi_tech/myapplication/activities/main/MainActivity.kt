@@ -1,12 +1,15 @@
 package com.resi_tech.myapplication.activities.main
 
+import CenteredTopAppBar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -28,7 +31,9 @@ class MainActivity : ComponentActivity() {
     val viewModel: MainViewModel by viewModels()
 
     setContent {
-      ChatScreen(viewModel)
+      CenteredTopAppBar { padding ->
+        ChatScreen(padding, viewModel)
+      }
     }
   }
 }
@@ -40,13 +45,15 @@ class MainActivity : ComponentActivity() {
   heightDp = 640
 )
 @Composable
-fun ChatScreen(viewModel: MainViewModel = MainViewModel()) {
+fun ChatScreen(padding: PaddingValues, viewModel: MainViewModel = MainViewModel()) {
   val messages by viewModel.messages.collectAsState(initial = emptyList())
 
   MyApplicationTheme {
     Box(
       contentAlignment = Alignment.Center,
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(padding)
     ) {
       LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(messages.size) { index ->
