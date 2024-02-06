@@ -1,7 +1,7 @@
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,6 +34,7 @@ import com.resi_tech.myapplication.ui.theme.PurpleDark
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CenteredTopAppBar(
+  scrollToBottom: () -> Unit,
   content: @Composable (PaddingValues) -> Unit = {}
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -59,9 +60,9 @@ fun CenteredTopAppBar(
           )
         },
         navigationIcon = {
-          IconButton(onClick = { /* do something */ }) {
+          IconButton(onClick = { scrollToBottom() }) {
             Icon(
-              imageVector = Icons.Filled.ArrowBack,
+              imageVector = Icons.Filled.KeyboardArrowDown,
               contentDescription = "Localized description"
             )
           }

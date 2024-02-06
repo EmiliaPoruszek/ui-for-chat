@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -23,6 +25,7 @@ import com.resi_tech.myapplication.activities.main.components.ChatItem
 import com.resi_tech.myapplication.components.DarkGrayText
 import com.resi_tech.myapplication.ui.theme.DynamicColorManager
 import com.resi_tech.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -49,8 +52,19 @@ fun ChatScreen(
 ) {
   val messages by viewModel.messages.collectAsState(initial = emptyList())
 
+  val listState = rememberLazyListState(0)
+  val coroutinesScope = rememberCoroutineScope()
+
+  fun scrollToBottom() {
+    if (messages.size - 1 > 0) {
+      coroutinesScope.launch {
+        listState.scrollToItem(messages.size - 1)
+      }
+    }
+  }
+
   MyApplicationTheme {
-    CenteredTopAppBar() { padding ->
+    CenteredTopAppBar(scrollToBottom = ::scrollToBottom) { padding ->
       Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -58,8 +72,8 @@ fun ChatScreen(
           .padding(padding)
           .background(DynamicColorManager.colorScheme.background)
       ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-          items(messages.size) { index ->
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+          items(messages.size, key = { index -> messages[index].id }) { index ->
             val message = messages[index]
             ChatItem(
               authorName = message.author.name,
